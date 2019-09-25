@@ -4,8 +4,15 @@ var path = require("path");
 var fs = require("fs");
 
 var ARCH = process.arch;
+if (process.argv.indexOf("-a") > 0) {
+	ARCH = process.argv[process.argv.indexOf("-a")+1];
+}
 var ZMQ = "4.2.2";
 var ZMQ_REPO = "libzmq";
+var FORCE = process.argv.includes("--force");
+if (FORCE) {
+	console.log("Using --force flag.");
+}
 
 if (process.env.npm_config_zmq_external == "true") {
   console.log("Requested to use external libzmq. Skipping libzmq build");
@@ -13,7 +20,7 @@ if (process.env.npm_config_zmq_external == "true") {
 }
 
 function buildZMQ(scriptPath, zmqDir) {
-  console.log("Building libzmq for " + process.platform);
+  console.log("Building libzmq for " + process.platform + " (" + ARCH + ")");
 
   var child = spawn(scriptPath, [ZMQ, ARCH]);
 
@@ -55,7 +62,7 @@ if (process.platform === "win32") {
     "https://github.com/nteract/libzmq-win/releases/download/v2.1.0/libzmq-" +
     ZMQ +
     "-" +
-    process.arch +
+    ARCH +
     ".lib";
   var DIR_NAME = path.join(__dirname, "..", "windows", "lib");
   var FILE_NAME = path.join(DIR_NAME, "libzmq.lib");
@@ -63,9 +70,14 @@ if (process.platform === "win32") {
   if (!fs.existsSync(DIR_NAME)) {
     fs.mkdirSync(DIR_NAME);
   }
+  
+  if (FORCE && fs.existsSync(FILE_NAME)) {
+	  console.log("Removing previous downloaded libzmq...");
+	  fs.unlinkSync(FILE_NAME);
+  }
 
   if (!fs.existsSync(FILE_NAME)) {
-    console.log("Downloading libzmq for Windows");
+    console.log("Downloading libzmq for Windows (" + ARCH + ")");
     download(LIB_URL, FILE_NAME, function(err) {
       if (err) {
         handleError(err);
