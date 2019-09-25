@@ -2,7 +2,6 @@
 *.swo
 *.o
 build
-*.lock*
 binding.node
 examples/stress-test-client
 node_modules
@@ -16,7 +15,6 @@ zmq
 docs
 
 npm-debug.log
-prebuilds
 zmq-build.log
 windows/lib/libzmq.lib
 
