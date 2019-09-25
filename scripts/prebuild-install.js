@@ -1,6 +1,6 @@
 var exec = require('child_process').exec;
 
-var pbi = 'prebuild-install';
+var pbi = 'prebuild-install --verbose --force';
 var platform = process.platform;
 var arch = process.arch;
 

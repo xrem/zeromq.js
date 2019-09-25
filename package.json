@@ -24,9 +24,13 @@
   "engines": {
     "node": ">=6.0"
   },
+  "binary": {
+    "host": "https://github.com",
+    "remote_path": "xrem/zeromq.js/raw/master/prebuilds"
+  },
   "scripts": {
     "build:libzmq": "node scripts/preinstall.js",
-    "install": "node scripts/prebuild-install.js || (node scripts/preinstall.js && node-gyp rebuild)",
+    "install": "node scripts/prebuild-install.js || (node scripts/preinstall.js --force && node-gyp rebuild)",
     "prebuild": "prebuild --all --strip",
     "build:docs": "jsdoc -R README.md -d docs lib/*.js",
     "test": "mocha --expose-gc --slow 300",
